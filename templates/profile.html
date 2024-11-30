@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Моят Профил{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center" style="margin-top: 100px;">Моят Профил</h1>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    {% if user.profile.profile_image %}
+                        <img src="{{ user.profile.profile_image.url }}" class="img-fluid rounded-circle mb-3" alt="Профилна снимка" style="width: 150px;">
+                    {% else %}
+                        <img src="{% static 'images/default_profile.jpg' %}" class="img-fluid rounded-circle mb-3" alt="Профилна снимка" style="width: 150px;">
+                    {% endif %}
+                    <h5>{{ user.username }}</h5>
+                    <p><strong>Имейл:</strong> {{ user.email }}</p>
+                    <p><strong>Био:</strong> {{ user.profile.bio|default:"Няма въведено био." }}</p>
+                    <p><strong>Телефон:</strong> {{ user.profile.phone_number|default:"Няма въведен телефон." }}</p>
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary mt-3">Редакция на Профил</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

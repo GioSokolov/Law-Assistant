@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Тълкувателни Решения{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center" style="margin-top: 100px;">Тълкувателни Решения</h1>
+    <p class="text-center" style="margin-top: 50px;">Изберете категория за достъп до тълкувателните решения.</p>
+
+    <div class="row mt-5">
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Трудови</h5>
+                    <p class="card-text">Прегледайте наличните тълкувателни решения в категория "Трудови".</p>
+                    <a href="{% url 'interpretations_list' 'labor' %}" class="btn btn-primary">Преглед на Трудови</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Семейни</h5>
+                    <p class="card-text">Прегледайте наличните тълкувателни решения в категория "Семейни".</p>
+                    <a href="{% url 'interpretations_list' 'family' %}" class="btn btn-primary">Преглед на Семейни</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

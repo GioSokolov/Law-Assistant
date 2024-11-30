@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Тълкувателни Решения - {{ category|capfirst }}{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center" style="margin-top: 100px;">Тълкувателни Решения - {{ category|capfirst }}</h1>
+    <div class="list-group mt-4">
+        {% for decision in decisions %}
+            <a href="{% url 'interpretation_detail' decision.id %}" class="list-group-item list-group-item-action">
+                <h5>{{ decision.title }}</h5>
+                <p>{{ decision.content|truncatewords:20 }}</p>
+            </a>
+        {% empty %}
+            <p class="text-center">Няма налични решения в категория "{{ category|capfirst }}".</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

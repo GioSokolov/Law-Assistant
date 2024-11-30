@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Правен Асистент | Контактна форма{% endblock %}
+
+{% block content %}
+    <section class="hero-section d-flex justify-content-center align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-12 mx-auto">
+                    <form class="custom-form contact-form" role="form" method="post">
+                        {% csrf_token %}
+                        <h2 class="hero-title text-center mb-4 pb-2">Форма за контакт</h2>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-floating">
+                                    <input type="text" name="full-name" id="full-name" class="form-control"
+                                           placeholder="Име" required="">
+                                    <label for="full-name">Име</label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-floating mb-4 p-0">
+                                    <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*"
+                                           class="form-control" placeholder="Имейл адрес" required="">
+                                    <label for="email">Имейл адрес</label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="message" name="message"
+                                              placeholder="Съобщение"></textarea>
+                                    <label for="message">Съобщение</label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-10 mx-auto">
+                                <button type="submit" class="form-control">Изпрати</button>
+                            </div>
+
+                            {% if messages %}
+                                <div class="container mt-3">
+                                    {% for message in messages %}
+                                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show auto-hide-alert"
+                                             role="alert">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-wrap">
+            <video autoplay loop muted class="custom-video" poster="">
+                <source src="{% static 'videos/video.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </section>
+{% endblock %}

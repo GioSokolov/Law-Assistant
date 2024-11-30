@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Правен Асистент | Начало{% endblock %}
+
+{% block content %}
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-12 mx-auto">
+                <small>Нашият сайт е в процес на изграждане.</small>
+                <h1 class="text-white mt-2 mb-4 pb-2">Правен Асистент</h1>
+                                <!-- HTML структура на таймера -->
+                <ul class="countdown d-flex flex-wrap align-items-center">
+                    <li class="countdown-item d-flex flex-column justify-content-center align-items-center">
+                        <h2 class="countdown-title days">14</h2>
+                        <span class="countdown-text">Days</span>
+                    </li>
+                    <li class="countdown-item d-flex flex-column justify-content-center align-items-center">
+                        <h2 class="countdown-title hours">10</h2>
+                        <span class="countdown-text">Hours</span>
+                    </li>
+                    <li class="countdown-item d-flex flex-column justify-content-center align-items-center">
+                        <h2 class="countdown-title minutes">15</h2>
+                        <span class="countdown-text">Minutes</span>
+                    </li>
+                    <li class="countdown-item d-flex flex-column justify-content-center align-items-center">
+                        <h2 class="countdown-title seconds">34</h2>
+                        <span class="countdown-text">Seconds</span>
+                    </li>     
+                </ul>
+                <!-- Край на HTML структурата на таймера -->
+            </div>
+        </div>
+    </div>
+
+    <div class="video-wrap">
+        <video autoplay loop muted class="custom-video" poster="">
+            <source src="{% static 'videos/video.mp4' %}" type="video/mp4">
+            Вашият браузър не поддържа видео таг.
+        </video>
+    </div>
+</section>
+{% endblock %}
+
+

@@ -1,0 +1,42 @@
+пъ{% extends 'base.html' %}
+
+{% block title %}Табло за Навигация{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center" style="margin-top: 100px;">Добре дошли в Правен Асистент</h1>
+    <p class="text-center" style="margin-top: 100px;">Изберете категория за достъп до желаното съдържание.</p>
+    
+    <div class="row mt-5">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Закони</h5>
+                    <p class="card-text">Прегледайте всички закони и техните подробности.</p>
+                    <a href="{% url 'laws_list' %}" class="btn btn-primary">Преглед на Закони</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Кодекси</h5>
+                    <p class="card-text">Достъп до различни кодекси и техните документи.</p>
+                    <a href="{% url 'codes_list' %}" class="btn btn-primary">Преглед на Кодекси</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Тълкувателни Решения</h5>
+                    <p class="card-text">Разгледайте наличните тълкувателни решения.</p>
+                    <a href="{% url 'interpretations_categories' %}" class="btn btn-primary">Преглед на Решения</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

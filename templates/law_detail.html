@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ law.title }}{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center" style="margin-top: 100px;">{{ law.title }}</h1>
+    <p class="text-center">{{ law.description }}</p>
+
+    {% if document_content %}
+        <div class="document-content mt-4 p-4 bg-light">
+            <pre>{{ document_content }}</pre>
+        </div>
+    {% else %}
+        <p class="text-danger text-center mt-4">Документът не е наличен или не може да бъде прочетен.</p>
+    {% endif %}
+</section>
+{% endblock %}

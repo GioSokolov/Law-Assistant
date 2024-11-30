@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Закони{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center" style="margin-top: 100px;">Закони</h1>
+    <div class="list-group mt-4">
+        {% for law in laws %}
+            <a href="{% url 'law_detail' law.id %}" class="list-group-item list-group-item-action">
+                <h5>{{ law.title }}</h5>
+                <p>{{ law.description|truncatewords:20 }}</p>
+            </a>
+        {% empty %}
+            <p class="text-center">Няма налични закони.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

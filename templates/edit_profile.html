@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Редакция на Профил{% endblock %}
+
+{% block content %}
+    <section class="hero-section d-flex justify-content-center align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-12 mx-auto">
+
+                    <!-- Останалите полета от профила -->
+                    <form method="POST" enctype="multipart/form-data" class="custom-form">
+                        {% csrf_token %}
+                        <h2 class="hero-title text-center mb-4 pb-2">Редакция на Профил</h2>
+
+
+                        <!-- Показване на текущото изображение -->
+                        {% if request.user.profile.profile_image %}
+                            <div class="text-center mb-3">
+                                <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Picture"
+                                     class="img-fluid rounded-circle" width="150">
+                            </div>
+                        {% endif %}
+
+
+                        <!-- Поле за потребителско име -->
+                        <div class="form-floating mt-4">
+                            <input type="text" name="username" id="username"
+                                   class="form-control"
+                                   value="{{ current_username }}"
+                                   placeholder="Потребителско име">
+                            <label for="username">Потребителско име</label>
+                        </div>
+
+
+                        <!-- Поле за Bio -->
+                        <div class="form-floating mt-4">
+                                <textarea name="bio" id="bio"
+                                          class="form-control {% if profile_form.bio.errors %}is-invalid{% endif %}"
+                                          placeholder="Вашето био"
+                                          style="height: 100px;">{{ profile_form.bio.value|default_if_none:'' }}</textarea>
+                            <label for="bio">Био</label>
+                            {% for error in profile_form.bio.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Поле за номер на телефон -->
+                        <div class="form-floating mt-4">
+                            <input type="text" name="phone_number" id="phone_number"
+                                   class="form-control {% if profile_form.phone_number.errors %}is-invalid{% endif %}"
+                                   placeholder="Телефон"
+                                   value="{{ profile_form.phone_number.value|default_if_none:'' }}">
+                            <label for="phone_number">Телефон</label>
+                            {% for error in profile_form.phone_number.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Поле за профилна снимка -->
+                        <div class="mt-4">
+                            <label for="profile_image" class="form-label">Профилна снимка</label>
+                            <input type="file" name="profile_image" id="profile_image"
+                                   class="form-control {% if profile_form.profile_image.errors %}is-invalid{% endif %}">
+                            {% for error in profile_form.profile_image.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-flex justify-content-end mb-1">
+                            <a href="{% url 'password_reset' %}" class="custom-btn custom-border-btn mx-auto">Смяна на
+                                парола</a>
+                        </div>
+
+                        <!-- Запази бутон -->
+                        <div class="row mt-4">
+                            <div class="col-lg-5 col-12 mx-auto">
+                                <button type="submit" class="form-control btn btn-primary">Запази</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-wrap">
+            <video autoplay loop muted class="custom-video" poster="">
+                <source src="{% static 'videos/video.mp4' %}" type="video/mp4">
+                Вашият браузър не поддържа видео таг.
+            </video>
+        </div>
+    </section>
+{% endblock %}
