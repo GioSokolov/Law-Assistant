@@ -1,5 +1,5 @@
 from django import forms
-from .models import Law, Code, InterpretationDecision
+from .models import Law, Code, InterpretationDecision, Article
 
 
 class LawForm(forms.ModelForm):
@@ -18,3 +18,9 @@ class InterpretationDecisionForm(forms.ModelForm):
     class Meta:
         model = InterpretationDecision
         fields = ['title', 'category', 'summary', 'document']
+
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'content', 'image', 'document']

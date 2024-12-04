@@ -18,6 +18,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
+
 from law_assistant import views as main_views
 
 urlpatterns = [
@@ -30,6 +32,9 @@ urlpatterns = [
     path('404/', main_views.error_404_view, name='404'),   # 404 страница
     path('accounts/', include('accounts.urls')),  # Accounts URL
     path('legal/', include('legal.urls')),  # Включване на URLs за legal приложението
+    path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
 
 

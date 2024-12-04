@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}Правен Асистент{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'fav.png' %}">
 
     <!-- CSS Files -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,700;1,200&family=Unbounded:wght@400;700&display=swap"
@@ -82,26 +83,9 @@
 <!-- Main Content Block -->
 <main>
     {% block content %}
-<div class="countdown">
-    <div class="time-section">
-        <span class="days">0</span>
-        <div class="timeRefDays">days</div>
-    </div>
-    <div class="time-section">
-        <span class="hours">0</span>
-        <div class="timeRefHours">hours</div>
-    </div>
-    <div class="time-section">
-        <span class="minutes">0</span>
-        <div class="timeRefMinutes">minutes</div>
-    </div>
-    <div class="time-section">
-        <span class="seconds">0</span>
-        <div class="timeRefSeconds">seconds</div>
-    </div>
-</div>
     {% endblock %}
 </main>
+
 
 {% if messages %}
     <div class="container mt-3">

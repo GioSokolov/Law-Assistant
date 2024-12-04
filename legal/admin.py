@@ -1,11 +1,6 @@
 from django.contrib import admin
-from .models import Category, Law, Code, InterpretationDecision, DocumentFile
+from .models import Category, Law, Code, InterpretationDecision, DocumentFile, Article, ArticleComment, ArticleLike
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-    ordering = ('name',)
 
 @admin.register(Law)
 class LawAdmin(admin.ModelAdmin):
@@ -39,3 +34,21 @@ class DocumentFileAdmin(admin.ModelAdmin):
     list_display = ('document', 'file')
     search_fields = ('document__title',)
     list_filter = ('document__category',)
+
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'published_date')
+    search_fields = ('title',)
+    prepopulated_fields = {'slug': ('title',)}
+
+
+@admin.register(ArticleComment)
+class ArticleCommentAdmin(admin.ModelAdmin):
+    list_display = ('article', 'author', 'created_at')
+    search_fields = ('article__title', 'author__username')
+
+
+@admin.register(ArticleLike)
+class ArticleLikeAdmin(admin.ModelAdmin):
+    list_display = ('article', 'user')

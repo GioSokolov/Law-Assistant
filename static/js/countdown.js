@@ -15,37 +15,30 @@
             $.extend(settings, options);
         }
 
-        // Дефиниране на променливата interval
-        var interval;
-
         //main countdown function
         function countdown_proc() {
-            eventDate = Date.parse(settings['date']) / 1000;
-            currentDate = Math.floor($.now() / 1000);
+            eventDate = Date.parse(settings['date']) / 1000; // Event date in seconds
+            currentDate = Math.floor($.now() / 1000); // Current date in seconds
 
-            if (eventDate <= currentDate) {
-                callback.call(this);
-                clearInterval(interval); // използваме вече дефинираната interval
-            }
+            // Calculate elapsed time
+            seconds = currentDate - eventDate;
 
-            seconds = eventDate - currentDate;
-
-            days = Math.floor(seconds / (60 * 60 * 24)); //calculate the number of days
-            seconds -= days * 60 * 60 * 24; //update the seconds variable with no. of days removed
+            days = Math.floor(seconds / (60 * 60 * 24)); // Calculate the number of days
+            seconds -= days * 60 * 60 * 24; // Update the seconds variable with no. of days removed
 
             hours = Math.floor(seconds / (60 * 60));
-            seconds -= hours * 60 * 60; //update the seconds variable with no. of hours removed
+            seconds -= hours * 60 * 60; // Update the seconds variable with no. of hours removed
 
             minutes = Math.floor(seconds / 60);
-            seconds -= minutes * 60; //update the seconds variable with no. of minutes removed
+            seconds -= minutes * 60; // Update the seconds variable with no. of minutes removed
 
-            //conditional Ss
+            // Update the HTML text references
             if (days === 1) { thisEl.find(".timeRefDays").text("day"); } else { thisEl.find(".timeRefDays").text("days"); }
             if (hours === 1) { thisEl.find(".timeRefHours").text("hour"); } else { thisEl.find(".timeRefHours").text("hours"); }
             if (minutes === 1) { thisEl.find(".timeRefMinutes").text("minute"); } else { thisEl.find(".timeRefMinutes").text("minutes"); }
             if (seconds === 1) { thisEl.find(".timeRefSeconds").text("second"); } else { thisEl.find(".timeRefSeconds").text("seconds"); }
 
-            //logic for the two_digits ON setting
+            // Apply formatting if needed
             if (settings['format'] === "on") {
                 days = (String(days).length >= 2) ? days : "0" + days;
                 hours = (String(hours).length >= 2) ? hours : "0" + hours;
@@ -53,7 +46,7 @@
                 seconds = (String(seconds).length >= 2) ? seconds : "0" + seconds;
             }
 
-            //update the countdown's html values.
+            // Update the countdown's HTML values
             if (!isNaN(eventDate)) {
                 thisEl.find(".days").text(days);
                 thisEl.find(".hours").text(hours);
@@ -65,11 +58,10 @@
             }
         }
 
-        //run the function
+        // Run the function once to initialize
         countdown_proc();
 
-        //loop the function
-        interval = setInterval(countdown_proc, 1000);
-
+        // Loop the function every second
+        setInterval(countdown_proc, 1000);
     }
 })(jQuery);

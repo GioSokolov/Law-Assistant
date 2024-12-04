@@ -1,4 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
+from django.utils.text import slugify
 
 
 class Category(models.Model):
@@ -63,3 +65,41 @@ class DocumentFile(models.Model):
 
     def __str__(self):
         return f"File for {self.document.title}"
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    content = models.TextField(blank=True, null=True)  # Съдържанието може да е опционално, ако качвате PDF.
+    published_date = models.DateField(auto_now_add=True)
+    image = models.ImageField(upload_to='articles/', blank=True, null=True)
+    document = models.FileField(upload_to='articles/documents/', blank=True, null=True)  # Поле за PDF документ.
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
+class ArticleComment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.article}"
+
+
+class ArticleLike(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('article', 'user')  # Prevent duplicate likes
+
+    def __str__(self):
+        return f"{self.user} likes {self.article}"

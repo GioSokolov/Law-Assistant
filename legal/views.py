@@ -1,7 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView, DetailView
-
-from .models import Law, Code, InterpretationDecision
+from .models import Law, Code, InterpretationDecision, Article, ArticleComment, ArticleLike
 from PyPDF2 import PdfReader
 
 
@@ -119,3 +120,68 @@ class InterpretationDetailView(DetailView):
 
         context['document_content'] = document_content
         return context
+
+
+def articles_list(request):
+    articles = Article.objects.all().order_by('-published_date')
+    return render(request, 'articles.html', {'articles': articles})
+
+
+class ArticleDetailView(DetailView):
+    model = Article
+    template_name = 'article_detail.html'
+    context_object_name = 'article'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        article = self.object
+
+        # Проверка дали потребителят е харесал статията
+        liked = False
+        if self.request.user.is_authenticated:
+            liked = ArticleLike.objects.filter(article=article, user=self.request.user).exists()
+
+        # Извличане на съдържание на документа
+        document_content = None
+        if article.document and article.document.name.endswith('.txt'):
+            try:
+                with article.document.open('r') as file:
+                    document_content = file.read()
+            except Exception as e:
+                document_content = f"Грешка при зареждането на документа: {str(e)}"
+        elif article.document and article.document.name.endswith('.pdf'):
+            try:
+                with article.document.open('rb') as pdf_file:
+                    pdf_reader = PdfReader(pdf_file)
+                    document_content = "\n".join(page.extract_text() for page in pdf_reader.pages)
+            except Exception as e:
+                document_content = f"Грешка при зареждането на PDF документа: {str(e)}"
+
+        # Добавяне на данни в контекста
+        comments = ArticleComment.objects.filter(article=article).order_by('-created_at')
+        context['document_content'] = document_content
+        context['comments'] = comments
+        context['liked'] = liked  # Добавяне на информация за харесването
+        return context
+
+
+@login_required
+def add_comment(request, slug):
+    if request.method == 'POST':
+        article = get_object_or_404(Article, slug=slug)
+        content = request.POST.get('content')
+        if content:
+            ArticleComment.objects.create(article=article, author=request.user, content=content)
+    return redirect('article_detail', slug=slug)
+
+
+@login_required
+def toggle_like(request, slug):
+    article = get_object_or_404(Article, slug=slug)
+    like, created = ArticleLike.objects.get_or_create(article=article, user=request.user)
+
+    if not created:
+        like.delete()
+
+    likes_count = ArticleLike.objects.filter(article=article).count()
+    return JsonResponse({'liked': created, 'likes_count': likes_count})

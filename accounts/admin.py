@@ -16,16 +16,3 @@ class UserProfileAdmin(admin.ModelAdmin):
         self.message_user(request, "Маркираните потребители са деактивирани.")
     deactivate_users.short_description = "Деактивирай потребители"
 
-@admin.register(ForumPost)
-class ForumPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'created_at')
-    search_fields = ('title', 'author__username')
-    list_filter = ('created_at',)
-    ordering = ('-created_at',)
-
-@admin.register(ForumComment)
-class ForumCommentAdmin(admin.ModelAdmin):
-    list_display = ('post', 'author', 'created_at')
-    search_fields = ('post__title', 'author__username', 'content')
-    list_filter = ('created_at',)
-    ordering = ('-created_at',)
