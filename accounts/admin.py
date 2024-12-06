@@ -15,4 +15,3 @@ class UserProfileAdmin(admin.ModelAdmin):
             profile.user.save()
         self.message_user(request, "Маркираните потребители са деактивирани.")
     deactivate_users.short_description = "Деактивирай потребители"
-
