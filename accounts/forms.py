@@ -46,25 +46,3 @@ class ProfileForm(forms.ModelForm):
             user_instance.save()  # Запазваме потребителя
             profile.save()  # Запазваме профила
         return profile
-
-
-# Форма за пост във форума
-class ForumPostForm(forms.ModelForm):
-    class Meta:
-        model = ForumPost
-        fields = ['title', 'content']
-
-
-# Форма за коментар във форума
-class ForumCommentForm(forms.ModelForm):
-    class Meta:
-        model = ForumComment
-        fields = ['content']
-
-
-class CustomPasswordChangeForm(PasswordChangeForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({'class': 'form-control'})
-
