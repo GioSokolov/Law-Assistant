@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Изтриване на профил{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center">Изтриване на профил</h1>
+    <p class="text-center">Сигурни ли сте, че искате да изтриете профила си? Това действие не може да бъде отменено.</p>
+    <div class="text-center mt-4">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Изтрий профила</button>
+            <a href="{% url 'profile_view' %}" class="btn btn-secondary">Откажи</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

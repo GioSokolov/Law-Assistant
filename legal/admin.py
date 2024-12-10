@@ -42,6 +42,11 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ('title',)
     prepopulated_fields = {'slug': ('title',)}
 
+    def approve_articles(self, request, queryset):
+        queryset.update(is_approved=True)
+        self.message_user(request, "Избраните статии бяха одобрени.")
+    approve_articles.short_description = "Одобряване на статии"
+
 
 @admin.register(ArticleComment)
 class ArticleCommentAdmin(admin.ModelAdmin):
@@ -52,3 +57,5 @@ class ArticleCommentAdmin(admin.ModelAdmin):
 @admin.register(ArticleLike)
 class ArticleLikeAdmin(admin.ModelAdmin):
     list_display = ('article', 'user')
+
+

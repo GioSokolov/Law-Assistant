@@ -1,7 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView, DetailView
+from .forms import ArticleForm
 from .models import Law, Code, InterpretationDecision, Article, ArticleComment, ArticleLike
 from PyPDF2 import PdfReader
 
@@ -123,7 +125,8 @@ class InterpretationDetailView(DetailView):
 
 
 def articles_list(request):
-    articles = Article.objects.all().order_by('-published_date')
+    # Показваме само одобрените статии, подредени по дата на публикуване
+    articles = Article.objects.filter(is_approved=True).order_by('-published_date')
     return render(request, 'articles.html', {'articles': articles})
 
 
@@ -131,6 +134,13 @@ class ArticleDetailView(DetailView):
     model = Article
     template_name = 'article_detail.html'
     context_object_name = 'article'
+
+    def get_object(self, queryset=None):
+        # Разрешаваме достъп само до одобрени статии
+        obj = super().get_object(queryset)
+        if not obj.is_approved:
+            raise Http404("Статията не е одобрена.")
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -143,26 +153,58 @@ class ArticleDetailView(DetailView):
 
         # Извличане на съдържание на документа
         document_content = None
-        if article.document and article.document.name.endswith('.txt'):
-            try:
-                with article.document.open('r') as file:
-                    document_content = file.read()
-            except Exception as e:
-                document_content = f"Грешка при зареждането на документа: {str(e)}"
-        elif article.document and article.document.name.endswith('.pdf'):
-            try:
-                with article.document.open('rb') as pdf_file:
-                    pdf_reader = PdfReader(pdf_file)
-                    document_content = "\n".join(page.extract_text() for page in pdf_reader.pages)
-            except Exception as e:
-                document_content = f"Грешка при зареждането на PDF документа: {str(e)}"
+        if article.document:
+            if article.document.name.endswith('.txt'):
+                try:
+                    with article.document.open('r') as file:
+                        document_content = file.read()
+                except Exception as e:
+                    document_content = f"Грешка при зареждането на документа: {str(e)}"
+            elif article.document.name.endswith('.pdf'):
+                try:
+                    with article.document.open('rb') as pdf_file:
+                        pdf_reader = PdfReader(pdf_file)
+                        document_content = "\n".join(page.extract_text() for page in pdf_reader.pages)
+                except Exception as e:
+                    document_content = f"Грешка при зареждането на PDF документа: {str(e)}"
 
-        # Добавяне на данни в контекста
+        # Коментари и статус за харесване
         comments = ArticleComment.objects.filter(article=article).order_by('-created_at')
         context['document_content'] = document_content
         context['comments'] = comments
-        context['liked'] = liked  # Добавяне на информация за харесването
+        context['liked'] = liked
         return context
+
+
+@login_required
+def add_article(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.author = request.user
+            article.save()
+            messages.success(request, "Вашата статия беше изпратена за одобрение.")
+            return redirect('articles_list')
+    else:
+        form = ArticleForm()
+    return render(request, 'add_article.html', {'form': form})
+
+
+@login_required
+def delete_article(request, slug):
+    article = get_object_or_404(Article, slug=slug)
+
+    # Увери се, че само авторът може да изтрие статията
+    if article.author != request.user:
+        return HttpResponseForbidden("Нямате право да изтривате тази статия.")
+
+    if request.method == 'POST':
+        article.delete()
+        messages.success(request, "Статията беше успешно изтрита.")
+        return redirect('articles_list')
+
+    return render(request, 'articles.html', {'article': article})
 
 
 @login_required

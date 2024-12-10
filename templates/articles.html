@@ -1,18 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}Статии{% endblock %}
 {% block content %}
-<section class="container my-5">
-    <h1 class="text-center" style="margin-top: 100px;">Статии</h1>
-    <div class="list-group mt-4">
-        {% for article in articles %}
-            <a href="{% url 'article_detail' article.slug %}" class="list-group-item list-group-item-action">
-                <h5>{{ article.title }}</h5>
-                <p>{{ article.content|truncatewords:20 }}</p>
-                <small class="text-muted">Публикувано: {{ article.published_date }}</small>
-            </a>
-        {% empty %}
-            <p class="text-center">Няма налични статии.</p>
-        {% endfor %}
-    </div>
-</section>
+    <section class="container my-5">
+        <h1 class="text-center" style="margin-top: 100px;">Статии</h1>
+
+        <!-- Бутон за качване на статия -->
+        {% if user.is_authenticated %}
+            <div class="text-end mb-4">
+                <a href="{% url 'add_article' %}" class="btn btn-success">Добави нова статия</a>
+            </div>
+        {% endif %}
+
+        <div class="list-group mt-4">
+            {% for article in articles %}
+                <a href="{% url 'article_detail' article.slug %}" class="list-group-item list-group-item-action">
+                    <h5>{{ article.title }}</h5>
+                    <p>{{ article.content|truncatewords:20 }}</p>
+                    <small class="text-muted">Публикувано: {{ article.published_date }}</small>
+                </a>
+            {% empty %}
+                <p class="text-center">Няма налични статии.</p>
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}

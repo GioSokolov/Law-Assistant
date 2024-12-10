@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
+from legal.utils import transliterate_to_latin
 
 
 class Category(models.Model):
@@ -74,10 +75,14 @@ class Article(models.Model):
     published_date = models.DateField(auto_now_add=True)
     image = models.ImageField(upload_to='articles/', blank=True, null=True)
     document = models.FileField(upload_to='articles/documents/', blank=True, null=True)  # Поле за PDF документ.
+    author = models.ForeignKey(User, on_delete=models.CASCADE)  # Поле за автора
+    is_approved = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            # Използваме функцията за транслитерация
+            transliterated_title = transliterate_to_latin(self.title)
+            self.slug = slugify(transliterated_title)
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -43,10 +43,24 @@
                 {% endif %}
 
                 {% if user.is_authenticated %}
-                    <a href="{% url 'contact' %}" class="btn btn-secondary me-2">Форма за контакт</a>
-                    <a href="{% url 'profile' %}" class="btn btn-primary me-2">Виж Профил</a>
-                    <!-- Button for logout if the user is logged in -->
-                    <a href="{% url 'logout' %}" class="btn btn-danger ms-2">Изход</a>
+                    <div class="d-flex align-items-center">
+                        <!-- Button for contact -->
+                        <form action="{% url 'contact' %}" method="get" class="d-inline me-2">
+                            <button type="submit" class="btn btn-secondary">Форма за контакт</button>
+                        </form>
+
+                        <!-- Button for profile -->
+                        <form action="{% url 'profile' %}" method="get" class="d-inline me-2">
+                            <button type="submit" class="btn btn-primary">Виж Профил</button>
+                        </form>
+
+                        <!-- Button for logout -->
+                        <form method="post" action="{% url 'logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Изход</button>
+                        </form>
+                    </div>
+
                 {% else %}
                     <!-- Login and register buttons if the user is not logged in -->
                     <div class="d-flex">
@@ -74,9 +88,9 @@
                         </div>
                     </div>
                 {% endif %}
-</div>
-</div>
-</div>
+            </div>
+        </div>
+    </div>
 </header>
 
 <!-- Offcanvas Menu -->

@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     CodesListView, LawsListView, InterpretationsCategoriesView,
     InterpretationsListView, LawDetailView, CodeDetailView, InterpretationDetailView, articles_list,
-    add_comment, toggle_like, ArticleDetailView
+    add_comment, toggle_like, ArticleDetailView, add_article, delete_article
 )
 
 urlpatterns = [
@@ -14,7 +14,9 @@ urlpatterns = [
     path('interpretations/<int:pk>/', InterpretationDetailView.as_view(), name='interpretation_detail'),
     path('interpretations/<str:category>/', InterpretationsListView.as_view(), name='interpretations_list'),
     path('articles/', articles_list, name='articles_list'),
+    path('articles/add/', add_article, name='add_article'),  # Този маршрут трябва да е преди slug маршрута
     path('articles/<slug:slug>/', ArticleDetailView.as_view(), name='article_detail'),
     path('articles/<slug:slug>/comment/', add_comment, name='add_comment'),
     path('articles/<slug:slug>/like/', toggle_like, name='toggle_like'),
+    path('articles/<slug:slug>/delete/', delete_article, name='delete_article'),
 ]

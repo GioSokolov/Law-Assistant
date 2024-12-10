@@ -10,6 +10,7 @@
 
         <p>{{ article.content }}</p>
         <p style="color: white;">Публикувано: {{ article.published_date }}</p>
+        <p>Автор: {{ article.author.username }}</p>
 
         <!-- PDF Документ -->
         {% if article.document %}
@@ -22,6 +23,13 @@
                     <pre style="color: white;">{{ document_content }}</pre>
                 {% endif %}
             </div>
+
+            {% if request.user == article.author %}
+                <form method="post" action="{% url 'delete_article' article.slug %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Желаете ли да изтриете статията?');">Изтрий статията</button>
+                </form>
+            {% endif %}
         {% endif %}
 
         <div class="mt-4">
@@ -31,7 +39,7 @@
                     {{ liked|yesno:"Премахни харесването,Харесай" }}
                 </button>
             {% else %}
-                <p>Трябва да <a href="{% url 'login' %}">влезете в профила си</a>, за да добавите коментар.</p>
+                <p>Трябва да <a href="{% url 'login' %}?next={{ request.path }}">влезете в профила си</a>, за да добавите коментар.</p>
             {% endif %}
             <p>Харесвания: <span id="likes-count">{{ article.likes.count }}</span></p>
         </div>

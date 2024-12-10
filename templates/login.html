@@ -43,6 +43,7 @@
                     <!-- Login Form -->
                     <form class="custom-form login-form" role="form" method="post" action="{% url 'login' %}">
                         {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}">
                         <h2 class="hero-title text-center mb-4 pb-2">Вход</h2>
 
                         <!-- Error Messages -->

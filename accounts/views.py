@@ -4,7 +4,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import UserRegisterForm, ProfileForm
+
+from legal.models import Article
+from .forms import UserRegisterForm, ProfileForm, CustomContactForm
+
 
 def register(request):
     if request.method == 'POST':
@@ -44,6 +47,10 @@ def edit_profile(request):
     })
 
 
+from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -51,10 +58,16 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('dashboard')  # Replace 'dashboard' with your actual dashboard URL
+            # Проверка за параметър 'next'
+            next_url = request.POST.get('next') or request.GET.get('next', 'dashboard')
+            return redirect(next_url)
         else:
             messages.error(request, "Некоректно потребителско име или парола")
-    return render(request, 'login.html')
+
+    # Вземаме параметър 'next' за предаване в шаблона
+    next_url = request.GET.get('next', '')
+    return render(request, 'login.html', {'next': next_url})
+
 
 
 def user_logout(request):
@@ -80,38 +93,62 @@ def change_password(request):
     return render(request, 'password-reset.html', {'form': form})
 
 
-
 def contact(request):
     if request.method == "POST":
-        full_name = request.POST.get("full-name")
-        email = request.POST.get("email")
-        message = request.POST.get("message")
+        form = CustomContactForm(request.POST)
+        if form.is_valid():
+            # Извличане на данни от формата
+            full_name = form.cleaned_data['full_name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
 
-        # Валидация на полетата
-        if not full_name or not email or not message:
-            messages.error(request, "Моля, попълнете всички полета.")
-            return render(request, "contact.html")
+            # Изпращане на имейл
+            subject = f"Контактно съобщение от {full_name}"
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    email,
+                    ['your_email@gmail.com'],  # Замени с твоя имейл
+                    fail_silently=False,
+                )
+                messages.success(request, "Вашето съобщение беше изпратено успешно!")
+                return redirect("contact")  # Замени с подходящата страница
+            except Exception as e:
+                messages.error(request, f"Възникна грешка: {e}")
+        else:
+            messages.error(request, "Моля, попълнете формуляра коректно.")
+    else:
+        form = CustomContactForm()
 
-        # Логика за изпращане на имейл
-        subject = f"Контактно съобщение от {full_name}"
-        try:
-            send_mail(
-                subject,
-                message,
-                email,
-                ['your_email@gmail.com'],  # Замени с твоя имейл
-                fail_silently=False,
-            )
-            messages.success(request, "Вашето съобщение беше изпратено успешно!")
-            return redirect("contact")  # Замени с подходящата страница
-        except Exception as e:
-            messages.error(request, f"Възникна грешка: {e}")
-            return render(request, "contact.html")
-
-    return render(request, "contact.html")
+    return render(request, "contact.html", {'form': form})
 
 
 @login_required
 def profile_view(request):
-    return render(request, 'profile.html')
+    # Общ брой статии на текущия потребител
+    user_articles_count = Article.objects.filter(author=request.user).count()
+
+    # Статии, чакащи одобрение
+    pending_articles_count = Article.objects.filter(author=request.user, is_approved=False).count()
+
+    # Публикувани статии
+    published_articles_count = user_articles_count - pending_articles_count
+
+    return render(request, 'profile.html', {
+        'user_articles_count': user_articles_count,
+        'pending_articles_count': pending_articles_count,
+        'published_articles_count': published_articles_count,
+    })
+
+
+@login_required
+def delete_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()  # Изтриваме потребителя
+        messages.success(request, "Вашият профил беше успешно изтрит.")
+        return redirect('index')  # Пренасочваме към началната страница
+
+    return render(request, 'delete_profile.html')  # Шаблон за потвърждение
 

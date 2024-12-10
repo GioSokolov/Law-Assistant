@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views  # Тук импортираме auth_views
+from .views import delete_profile
 
 urlpatterns = [
     path('register/', views.register, name='register'),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('password_reset/', views.change_password, name='password_reset'),
     path("contact/", views.contact, name="contact"),
     path('profile/', views.profile_view, name='profile'),
+    path('delete-profile/', delete_profile, name='delete_profile'),
 ]

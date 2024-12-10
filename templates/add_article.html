@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Добавяне на статия{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center" style="margin-top: 100px;">Добавяне на статия</h1>
+
+    <!-- Форма за добавяне на статия -->
+    <form method="post" enctype="multipart/form-data" class="custom-form">
+        {% csrf_token %}
+
+        <!-- Поле за заглавие -->
+        <div class="mb-3" style="color: white;">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="error">
+                    {% for error in form.title.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле за документ -->
+        <div class="mb-3" style="color: white;">
+            {{ form.document.label_tag }}
+            {{ form.document }}
+            {% if form.document.errors %}
+                <div class="error">
+                    {% for error in form.document.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Бутон за запазване -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Запази</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
