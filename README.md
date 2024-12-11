@@ -6,6 +6,7 @@
 
 🌐 Деплоймънт 
 Проектът е деплойнат на PythonAnywhere:
+
 Адрес: https://giossss.pythonanywhere.com
 
 
