@@ -60,7 +60,7 @@
         {% if user.is_authenticated %}
             <form method="post" action="{% url 'add_comment' article.slug %}">
                 {% csrf_token %}
-                <label for="content">Вашият коментар:</label>
+                <label for="content"></label>
                 <textarea id="content" name="content" class="form-control mb-3" rows="3"
                           placeholder="Добавете коментар"></textarea>
                 <button type="submit" class="btn btn-primary">Изпрати</button>
