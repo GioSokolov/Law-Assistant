@@ -6,25 +6,26 @@ from django.views.generic import ListView, TemplateView, DetailView
 from .forms import ArticleForm
 from .models import Law, Code, InterpretationDecision, Article, ArticleComment, ArticleLike
 from PyPDF2 import PdfReader
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class CodesListView(ListView):
+class CodesListView(LoginRequiredMixin, ListView):
     model = Code
     template_name = 'codes.html'
     context_object_name = 'codes'
 
 
-class LawsListView(ListView):
+class LawsListView(LoginRequiredMixin, ListView):
     model = Law
     template_name = 'laws.html'
     context_object_name = 'laws'
 
 
-class InterpretationsCategoriesView(TemplateView):
+class InterpretationsCategoriesView(LoginRequiredMixin, TemplateView):
     template_name = 'interpretations.html'
 
 
-class InterpretationsListView(ListView):
+class InterpretationsListView(LoginRequiredMixin, ListView):
     model = InterpretationDecision
     template_name = 'interpretations_list.html'
     context_object_name = 'decisions'
@@ -43,7 +44,7 @@ class InterpretationsListView(ListView):
         return context
 
 
-class LawDetailView(DetailView):
+class LawDetailView(LoginRequiredMixin, DetailView):
     model = Law
     template_name = 'law_detail.html'
     context_object_name = 'law'
@@ -70,7 +71,7 @@ class LawDetailView(DetailView):
         return context
 
 
-class CodeDetailView(DetailView):
+class CodeDetailView(LoginRequiredMixin, DetailView):
     model = Code
     template_name = 'code_detail.html'
     context_object_name = 'code'
@@ -97,7 +98,7 @@ class CodeDetailView(DetailView):
         return context
 
 
-class InterpretationDetailView(DetailView):
+class InterpretationDetailView(LoginRequiredMixin, DetailView):
     model = InterpretationDecision
     template_name = 'interpretation_detail.html'
     context_object_name = 'interpretation'

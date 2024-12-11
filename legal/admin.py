@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Law, Code, InterpretationDecision, DocumentFile, Article, ArticleComment, ArticleLike
+from .models import Law, Code, InterpretationDecision, DocumentFile, Article, ArticleComment, ArticleLike
 
 
 @admin.register(Law)
@@ -15,6 +15,7 @@ class LawAdmin(admin.ModelAdmin):
         self.message_user(request, "Маркираните закони са актуализирани!")
     mark_as_published.short_description = "Маркирай като публикувано"
 
+
 @admin.register(Code)
 class CodeAdmin(admin.ModelAdmin):
     list_display = ('title', 'published_date', 'category')
@@ -22,12 +23,14 @@ class CodeAdmin(admin.ModelAdmin):
     list_filter = ('published_date', 'category')
     ordering = ('-published_date',)
 
+
 @admin.register(InterpretationDecision)
 class InterpretativeDecisionAdmin(admin.ModelAdmin):
     list_display = ('title', 'published_date', 'category')
     search_fields = ('title', 'content')
     list_filter = ('published_date', 'category')
     ordering = ('-published_date',)
+
 
 @admin.register(DocumentFile)
 class DocumentFileAdmin(admin.ModelAdmin):
