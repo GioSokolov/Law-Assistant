@@ -72,3 +72,5 @@ class LegalTests(TestCase):
         response = self.client.post(reverse('toggle_like', kwargs={'slug': self.article.slug}))
         self.assertEqual(response.status_code, 200)
         self.assertFalse(ArticleLike.objects.filter(article=self.article, user=self.user).exists())
+
+
