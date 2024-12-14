@@ -47,10 +47,6 @@ def edit_profile(request):
     })
 
 
-from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -67,7 +63,6 @@ def user_login(request):
     # Вземаме параметър 'next' за предаване в шаблона
     next_url = request.GET.get('next', '')
     return render(request, 'login.html', {'next': next_url})
-
 
 
 def user_logout(request):
